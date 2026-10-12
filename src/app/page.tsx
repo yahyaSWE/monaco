@@ -55,14 +55,6 @@ export default function Home() {
               <Arrow />
             </Link>
           </div>
-          <div className="hero-bottom">
-            <Sparkle />
-            <span>
-              Strålande hy.
-              <br />
-              Med omtanke, kunskap och lugn.
-            </span>
-          </div>
         </div>
         <div className="hero-image">
           <Image
@@ -72,10 +64,6 @@ export default function Home() {
             sizes="(max-width: 760px) 100vw, 50vw"
             priority
           />
-          <div className="hero-image-caption">
-            <span>MONACO CLINIC</span>
-            <span>En stund som är bara din.</span>
-          </div>
         </div>
       </section>
       <div className="promise-strip">

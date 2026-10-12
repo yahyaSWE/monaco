@@ -339,24 +339,6 @@ summary:focus-visible {
   font-size: 13px;
   gap: 10px;
 }
-.hero-bottom {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 48px;
-  color: var(--muted);
-}
-.hero-bottom svg {
-  width: 34px;
-  height: 34px;
-  color: var(--olive-light);
-}
-.hero-bottom span {
-  font-size: 11px;
-  line-height: 1.65;
-  letter-spacing: 0.04em;
-}
 .hero-image {
   position: relative;
   min-height: 650px;
@@ -365,33 +347,6 @@ summary:focus-visible {
 .hero-image > img {
   object-fit: cover;
   object-position: 58% center;
-}
-.hero-image:after {
-  content: "";
-  position: absolute;
-  inset: 65% 0 0;
-  background: linear-gradient(transparent, rgba(46, 36, 24, 0.36));
-  pointer-events: none;
-}
-.hero-image-caption {
-  position: absolute;
-  bottom: 34px;
-  left: 32px;
-  right: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1;
-  color: #fffdf6;
-}
-.hero-image-caption span:first-child {
-  font-size: 9px;
-  letter-spacing: 0.2em;
-}
-.hero-image-caption span:last-child {
-  font-family: var(--font-serif);
-  font-size: 23px;
-  font-style: italic;
 }
 .promise-strip {
   border-block: 1px solid var(--border);
@@ -1465,25 +1420,11 @@ summary:focus-visible {
     padding-inline: 18px;
     min-height: 48px;
   }
-  .hero-bottom {
-    padding-top: 30px;
-  }
-  .hero-bottom span {
-    font-size: 10px;
-  }
   .hero-image {
     min-height: 410px;
   }
   .hero-image > img {
     object-position: center 62%;
-  }
-  .hero-image-caption {
-    left: 24px;
-    right: 24px;
-    bottom: 25px;
-  }
-  .hero-image-caption span:last-child {
-    font-size: 23px;
   }
   .promise-strip > .container {
     justify-content: center;
@@ -1850,9 +1791,6 @@ summary:focus-visible {
   }
   .hero-image {
     min-height: 330px;
-  }
-  .hero-image-caption span:last-child {
-    font-size: 20px;
   }
   h2 {
     font-size: 43px;
