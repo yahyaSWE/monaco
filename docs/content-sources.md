@@ -1,4 +1,4 @@
-# Monaco Klinik — content provenance
+# Monaco Clinic — content provenance
 
 Checked 2026-10-12. The user explicitly supplied the original Lovable site for rebuilding with the same content.
 

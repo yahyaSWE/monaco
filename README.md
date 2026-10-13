@@ -1,6 +1,6 @@
-# Monaco Klinik
+# Monaco Clinic
 
-Next.js-webbplats för Monaco Klinik i Eskilstuna, ombyggd från [den tidigare Lovable-sidan](https://champagne-gold-glow.lovable.app/). Innehåll och originalbilder har bevarats, med ny responsiv design och egna lokala SEO-sidor för laserhårborttagning, microblading, läppigmentering, Hydrofacial och microneedling.
+Next.js-webbplats för Monaco Clinic i Eskilstuna, ombyggd från [den tidigare Lovable-sidan](https://champagne-gold-glow.lovable.app/). Innehåll och originalbilder har bevarats, med ny responsiv design och egna lokala SEO-sidor för laserhårborttagning, microblading, läppigmentering, Hydrofacial och microneedling.
 
 Projektet använder Next.js 16.4, React 19.3 och TypeScript. [Next.js kräver Node.js 20.9 eller senare](https://nextjs.org/docs/app/getting-started/installation); utvecklingsmiljön och CI använder Node.js 24.
 

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getInstagramPosts, instagramProfileUrl } from "@/lib/instagram";
+import { site } from "@/lib/site";
 import styles from "./instagram-feed.module.css";
 
 function InstagramIcon() {
@@ -38,7 +39,7 @@ export async function InstagramFeed() {
       <div className={`instagram-header ${styles.header}`}>
         <div>
           <p className={`eyebrow ${styles.eyebrow}`}>Följ livet på kliniken</p>
-          <h2 id="instagram-heading">Monaco Klinik på Instagram</h2>
+          <h2 id="instagram-heading">{site.name} på Instagram</h2>
           <p className={styles.introduction}>
             Inspiration, nyheter och en närmare titt på vår klinik i Eskilstuna.
           </p>
@@ -65,7 +66,7 @@ export async function InstagramFeed() {
               href={post.permalink}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`${post.caption ? post.caption.slice(0, 160) : "Inlägg från Monaco Klinik"}. Öppna på Instagram i en ny flik.`}
+              aria-label={`${post.caption ? post.caption.slice(0, 160) : `Inlägg från ${site.name}`}. Öppna på Instagram i en ny flik.`}
             >
               <div className={styles.media}>
                 {post.imageUrl ? (
@@ -74,7 +75,7 @@ export async function InstagramFeed() {
                     alt={
                       post.caption
                         ? post.caption.slice(0, 180)
-                        : "Monaco Klinik på Instagram"
+                        : `${site.name} på Instagram`
                     }
                     fill
                     sizes="(max-width: 540px) 90vw, (max-width: 850px) 45vw, 30vw"
@@ -124,7 +125,7 @@ export async function InstagramFeed() {
             <InstagramIcon />
           </div>
           <div>
-            <h3>Kom närmare Monaco Klinik</h3>
+            <h3>Kom närmare {site.name}</h3>
             <p>
               Besök vår Instagram för de senaste inläggen,
               behandlingsinspiration och glimtar från vardagen på kliniken.
