@@ -9,18 +9,18 @@ import {
 } from "@/lib/site";
 
 describe("production origin resolution", () => {
-  it("leaves canonical URLs unconfigured when no production origin is available", () => {
-    assert.equal(resolveSiteUrl({}), null);
+  it("uses the confirmed custom domain when no origin override is configured", () => {
+    assert.equal(resolveSiteUrl({}), "https://monacoclinic.se");
     assert.equal(
       resolveSiteUrl({
         NEXT_PUBLIC_SITE_URL: "  ",
         VERCEL_PROJECT_PRODUCTION_URL: "  ",
       }),
-      null,
+      "https://monacoclinic.se",
     );
     assert.equal(
       resolveSiteUrl({ VERCEL_URL: "temporary-preview.vercel.app" }),
-      null,
+      "https://monacoclinic.se",
     );
   });
 
@@ -35,17 +35,17 @@ describe("production origin resolution", () => {
     );
   });
 
-  it("uses the Vercel production domain with HTTPS when the explicit origin is empty", () => {
+  it("keeps the confirmed custom domain ahead of Vercel's project domain", () => {
     assert.equal(
       resolveSiteUrl({
         NEXT_PUBLIC_SITE_URL: " ",
         VERCEL_PROJECT_PRODUCTION_URL: " monaco-project.vercel.app ",
       }),
-      "https://monaco-project.vercel.app",
+      "https://monacoclinic.se",
     );
   });
 
-  it("does not silently replace an invalid explicit origin with another domain", () => {
+  it("does not silently replace an invalid explicit origin with the default domain", () => {
     assert.equal(
       resolveSiteUrl({
         NEXT_PUBLIC_SITE_URL: "invalid",
@@ -75,7 +75,7 @@ describe("production origin resolution", () => {
 
     assert.equal(
       resolveSiteUrl({ VERCEL_PROJECT_PRODUCTION_URL: "user@clinic.example" }),
-      null,
+      "https://monacoclinic.se",
     );
   });
 });
@@ -83,8 +83,8 @@ describe("production origin resolution", () => {
 describe("production indexing eligibility", () => {
   it("accepts normal public HTTPS domains, including subdomains and international domain names", () => {
     for (const origin of [
-      "https://monacoklinik.se",
-      "https://www.monacoklinik.se",
+      "https://monacoclinic.se",
+      "https://www.monacoclinic.se",
       "https://monaco-project.vercel.app",
       "https://clinic.example.com",
       "https://www.example.com.",
@@ -134,10 +134,10 @@ describe("production indexing eligibility", () => {
       undefined,
       null,
       "",
-      "monacoklinik.se",
-      "http://monacoklinik.se",
-      "https://username@monacoklinik.se",
-      "https://username:password@monacoklinik.se",
+      "monacoclinic.se",
+      "http://monacoclinic.se",
+      "https://username@monacoclinic.se",
+      "https://username:password@monacoclinic.se",
       "https://bad_domain.se",
       "https://-clinic.se",
       "https://clinic..se",
@@ -148,16 +148,25 @@ describe("production indexing eligibility", () => {
   });
 
   it("supports local metadata URLs while keeping development sites unindexable", () => {
-    const localEnvironment = { NEXT_PUBLIC_SITE_URL: "http://localhost:3000" };
+    const localEnvironment = {
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
+      NODE_ENV: "production",
+    };
 
     assert.equal(resolveSiteUrl(localEnvironment), "http://localhost:3000");
     assert.equal(isSiteIndexable(localEnvironment), false);
     assert.equal(
-      isSiteIndexable({ NEXT_PUBLIC_SITE_URL: "https://127.0.0.1" }),
+      isSiteIndexable({
+        NEXT_PUBLIC_SITE_URL: "https://127.0.0.1",
+        NODE_ENV: "production",
+      }),
       false,
     );
     assert.equal(
-      isSiteIndexable({ NEXT_PUBLIC_SITE_URL: "http://monacoklinik.se" }),
+      isSiteIndexable({
+        NEXT_PUBLIC_SITE_URL: "http://monacoclinic.se",
+        NODE_ENV: "production",
+      }),
       false,
     );
   });
@@ -165,6 +174,7 @@ describe("production indexing eligibility", () => {
   it("disables preview and development indexing even when a public production origin is configured", () => {
     const productionOrigin = {
       NEXT_PUBLIC_SITE_URL: "https://clinic.example.com",
+      NODE_ENV: "production",
     };
 
     assert.equal(isSiteIndexable(productionOrigin), true);
@@ -184,10 +194,55 @@ describe("production indexing eligibility", () => {
       isSiteIndexable({
         VERCEL_PROJECT_PRODUCTION_URL: "monaco-project.vercel.app",
         VERCEL_ENV: "production",
+        NODE_ENV: "production",
       }),
       true,
     );
     assert.equal(isSiteIndexable({}), false);
+  });
+
+  it("indexes production on the confirmed domain while local development keeps the same canonical unindexed", () => {
+    assert.equal(
+      resolveSiteUrl({ NODE_ENV: "development" }),
+      "https://monacoclinic.se",
+    );
+    assert.equal(isSiteIndexable({ NODE_ENV: "development" }), false);
+    assert.equal(isSiteIndexable({ NODE_ENV: "test" }), false);
+    assert.equal(isSiteIndexable({ NODE_ENV: "production" }), true);
+    assert.equal(
+      isSiteIndexable({ NODE_ENV: "production", VERCEL_ENV: "production" }),
+      true,
+    );
+  });
+
+  it("allows a server-side indexing opt-out without permitting an opt-in to bypass safeguards", () => {
+    assert.equal(
+      isSiteIndexable({
+        NODE_ENV: "production",
+        SITE_INDEXING_ENABLED: "false",
+      }),
+      false,
+    );
+    assert.equal(
+      isSiteIndexable({
+        NODE_ENV: "production",
+        SITE_INDEXING_ENABLED: "true",
+      }),
+      true,
+    );
+    for (const environment of [
+      { NODE_ENV: "development" },
+      { NODE_ENV: "production", VERCEL_ENV: "preview" },
+      { NODE_ENV: "production", VERCEL_ENV: "development" },
+      { NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: "http://localhost:3000" },
+      { NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: "https://clinic.test" },
+      { NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: "invalid" },
+    ]) {
+      assert.equal(
+        isSiteIndexable({ ...environment, SITE_INDEXING_ENABLED: "true" }),
+        false,
+      );
+    }
   });
 });
 

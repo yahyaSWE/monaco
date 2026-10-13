@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { treatments, getTreatment } from "@/lib/content";
-import { absoluteUrl, siteUrl } from "@/lib/site";
+import { absoluteUrl, isPublicProductionUrl, siteUrl } from "@/lib/site";
 import { pageMetadata, serializeJsonLd } from "@/lib/seo";
 import { Arrow, BookingLink, Breadcrumbs, Faq } from "@/components/ui";
 import { ContactSection } from "@/components/contact-section";
+import { PageSchema } from "@/components/page-schema";
 
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -78,6 +79,7 @@ export default async function TreatmentPage({ params }: Props) {
 
   return (
     <>
+      <PageSchema path={path} />
       <div className="container">
         <Breadcrumbs
           items={[
@@ -183,7 +185,7 @@ export default async function TreatmentPage({ params }: Props) {
         </div>
       </section>
       <ContactSection />
-      {siteUrl && (
+      {isPublicProductionUrl(siteUrl) && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}

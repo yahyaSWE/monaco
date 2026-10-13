@@ -2,6 +2,7 @@ import Image from "next/image";
 import { pageMetadata } from "@/lib/seo";
 import { BookingLink, Breadcrumbs, Sparkle } from "@/components/ui";
 import { ContactSection } from "@/components/contact-section";
+import { PageSchema } from "@/components/page-schema";
 
 export const metadata = pageMetadata(
   "Om vår skönhetsklinik i Eskilstuna",
@@ -12,6 +13,7 @@ export const metadata = pageMetadata(
 export default function AboutPage() {
   return (
     <>
+      <PageSchema path="/om-oss" type="AboutPage" />
       <section className="page-intro container">
         <Breadcrumbs items={[{ label: "Om kliniken" }]} />
         <p className="eyebrow">VÄLKOMMEN TILL MONACO</p>

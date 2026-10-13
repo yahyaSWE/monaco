@@ -1,6 +1,7 @@
 import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { Breadcrumbs } from "@/components/ui";
+import { PageSchema } from "@/components/page-schema";
 
 export const metadata = pageMetadata(
   "Integritet & cookies",
@@ -11,6 +12,7 @@ export const metadata = pageMetadata(
 export default function PrivacyPage() {
   return (
     <article className="container legal-page">
+      <PageSchema path="/integritet" />
       <Breadcrumbs items={[{ label: "Integritet & cookies" }]} />
       <p className="eyebrow">DIN INTEGRITET</p>
       <h1>

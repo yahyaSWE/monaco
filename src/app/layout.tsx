@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { absoluteUrl, isIndexable, site, siteUrl } from "@/lib/site";
-import { businessSchema, serializeJsonLd } from "@/lib/seo";
+import {
+  absoluteUrl,
+  isIndexable,
+  isPublicProductionUrl,
+  site,
+  siteUrl,
+} from "@/lib/site";
+import { businessSchema, serializeJsonLd, websiteSchema } from "@/lib/seo";
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -27,7 +33,23 @@ export const metadata: Metadata = {
     template: "%s | Monaco Clinic",
   },
   applicationName: site.name,
-  robots: { index: isIndexable, follow: isIndexable },
+  robots: {
+    index: isIndexable,
+    follow: isIndexable,
+    googleBot: {
+      index: isIndexable,
+      follow: isIndexable,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
+  },
   formatDetection: { telephone: false },
 };
 
@@ -36,6 +58,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="sv">
+      <head>
+        <link rel="describedby" href="/llms.txt" type="text/plain" />
+      </head>
       <body className={`${serif.variable} ${sans.variable}`} id="sidans-topp">
         <a className="skip-link" href="#huvudinnehall">
           Hoppa till innehållet
@@ -43,11 +68,11 @@ export default function RootLayout({
         <Header />
         <main id="huvudinnehall">{children}</main>
         <Footer />
-        {siteUrl && (
+        {isPublicProductionUrl(siteUrl) && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: serializeJsonLd(businessSchema()),
+              __html: serializeJsonLd([businessSchema(), websiteSchema()]),
             }}
           />
         )}

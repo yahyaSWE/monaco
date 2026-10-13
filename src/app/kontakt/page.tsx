@@ -2,6 +2,7 @@ import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { Breadcrumbs, Faq, Arrow } from "@/components/ui";
 import { ContactSection } from "@/components/contact-section";
+import { PageSchema } from "@/components/page-schema";
 
 export const metadata = pageMetadata(
   "Boka & kontakta Monaco Clinic i Eskilstuna",
@@ -12,6 +13,7 @@ export const metadata = pageMetadata(
 export default function ContactPage() {
   return (
     <>
+      <PageSchema path="/kontakt" type="ContactPage" />
       <section className="page-intro container">
         <Breadcrumbs items={[{ label: "Kontakt & bokning" }]} />
         <p className="eyebrow">VI FINNS HÄR FÖR DIG</p>

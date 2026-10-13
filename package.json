@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
+    "indexnow": "node scripts/submit-indexnow.mjs",
     "test": "node --conditions=react-server --import tsx --test tests/*.test.ts"
   },
   "dependencies": {

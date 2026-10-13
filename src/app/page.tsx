@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Arrow, BookingLink, Sparkle } from "@/components/ui";
 import { ContactSection } from "@/components/contact-section";
 import { InstagramFeed } from "@/components/instagram-feed";
+import { PageSchema } from "@/components/page-schema";
 
 export const metadata = pageMetadata(
   "Hudvård & skönhetsbehandlingar i Eskilstuna",
@@ -31,6 +32,7 @@ const reviews = [
 export default function Home() {
   return (
     <>
+      <PageSchema path="/" />
       <section className="hero">
         <div className="hero-copy">
           <p className="eyebrow">

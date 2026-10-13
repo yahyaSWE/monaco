@@ -4,6 +4,7 @@ import { treatments } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { Arrow, BookingLink, Breadcrumbs, Sparkle } from "@/components/ui";
 import { ContactSection } from "@/components/contact-section";
+import { PageSchema } from "@/components/page-schema";
 
 export const metadata = pageMetadata(
   "Skönhetsbehandlingar i Eskilstuna",
@@ -14,6 +15,7 @@ export const metadata = pageMetadata(
 export default function TreatmentsPage() {
   return (
     <>
+      <PageSchema path="/behandlingar" type="CollectionPage" />
       <section className="page-intro container">
         <Breadcrumbs items={[{ label: "Behandlingar" }]} />
         <p className="eyebrow">BEHANDLINGAR MED DIG I CENTRUM</p>

@@ -1,6 +1,7 @@
 export const site = {
   name: "Monaco Clinic",
   legalName: "Monaco Clinic AB",
+  productionUrl: "https://monacoclinic.se",
   phone: "073-577 19 91",
   phoneHref: "tel:+46735771991",
   email: "samahameed99@hotmail.com",
@@ -17,9 +18,7 @@ export function resolveSiteUrl(
   env: Record<string, string | undefined>,
 ): string | null {
   const configured = env.NEXT_PUBLIC_SITE_URL?.trim();
-  const vercelDomain = env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
-  const value = configured || (vercelDomain ? `https://${vercelDomain}` : "");
-  if (!value) return null;
+  const value = configured || site.productionUrl;
   try {
     const url = new URL(value);
     if (
@@ -70,9 +69,11 @@ export function isSiteIndexable(
   env: Record<string, string | undefined>,
 ): boolean {
   return (
+    env.NODE_ENV === "production" &&
     isPublicProductionUrl(resolveSiteUrl(env)) &&
     env.VERCEL_ENV !== "preview" &&
-    env.VERCEL_ENV !== "development"
+    env.VERCEL_ENV !== "development" &&
+    env.SITE_INDEXING_ENABLED !== "false"
   );
 }
 

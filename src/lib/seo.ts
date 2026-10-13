@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { absoluteUrl, site, siteUrl } from "@/lib/site";
+import { treatments } from "@/lib/content";
+import { markdownPath } from "@/lib/discovery";
 
 export function pageMetadata(
   title: string,
@@ -9,7 +11,12 @@ export function pageMetadata(
   return {
     title: { absolute: `${title} | ${site.name}` },
     description,
-    alternates: siteUrl ? { canonical: absoluteUrl(path) } : undefined,
+    alternates: siteUrl
+      ? {
+          canonical: absoluteUrl(path),
+          types: { "text/markdown": absoluteUrl(markdownPath(path)) },
+        }
+      : undefined,
     openGraph: {
       title: `${title} | ${site.name}`,
       description,
@@ -42,6 +49,8 @@ export function businessSchema() {
     "@id": absoluteUrl("/#clinic"),
     name: site.name,
     legalName: site.legalName,
+    description:
+      "Hudvård och skönhetsbehandlingar i Eskilstuna: laserhårborttagning, microblading, läppigmentering, hydrofacial och microneedling.",
     url: absoluteUrl(),
     image: absoluteUrl("/images/hero.jpg"),
     telephone: "+46735771991",
@@ -72,6 +81,55 @@ export function businessSchema() {
     sameAs: [site.instagramUrl, site.bookingUrl],
     hasMap: site.mapsUrl,
     areaServed: { "@type": "City", name: site.city },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Behandlingar på Monaco Clinic i Eskilstuna",
+      itemListElement: treatments.map((treatment) => ({
+        "@type": "Offer",
+        url: site.bookingUrl,
+        itemOffered: {
+          "@type": "Service",
+          "@id": absoluteUrl(`/behandlingar/${treatment.slug}#service`),
+          name: treatment.name,
+          url: absoluteUrl(`/behandlingar/${treatment.slug}`),
+          provider: { "@id": absoluteUrl("/#clinic") },
+        },
+      })),
+    },
+  };
+}
+
+export function websiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": absoluteUrl("/#website"),
+    url: absoluteUrl(),
+    name: site.name,
+    inLanguage: "sv-SE",
+    publisher: { "@id": absoluteUrl("/#clinic") },
+  };
+}
+
+export function webPageSchema(
+  path: string,
+  name: string,
+  description: string,
+  type = "WebPage",
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": absoluteUrl(`${path}#webpage`),
+    url: absoluteUrl(path),
+    name,
+    description,
+    inLanguage: "sv-SE",
+    isPartOf: { "@id": absoluteUrl("/#website") },
+    about: { "@id": absoluteUrl("/#clinic") },
+    ...(path.startsWith("/behandlingar/")
+      ? { mainEntity: { "@id": absoluteUrl(`${path}#service`) } }
+      : {}),
   };
 }
 
